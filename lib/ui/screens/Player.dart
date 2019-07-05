@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player/youtube_player.dart';
 
 class Player extends StatefulWidget {
-  final DocumentSnapshot videoUrl;
+  final DocumentSnapshot videoDocument;
 
-  Player({Key key, @required this.videoUrl}) : super(key: key);
+  Player({Key key, @required this.videoDocument}) : super(key: key);
 
   @override
   _PlayerState createState() => _PlayerState();
@@ -23,7 +23,7 @@ class _PlayerState extends State<Player> {
     FirebaseAdMob.instance
         .initialize(appId: FirebaseAdMob.testAppId, analyticsEnabled: true);
     _bannerAd = createBannerAd()..load();
-//    _bannerAd.show();
+    _bannerAd.show();
     _interstitialAd = createInterstitialAd()..load();
   }
 
@@ -69,7 +69,7 @@ class _PlayerState extends State<Player> {
             backgroundColor: Colors.white30,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
-              title: Text("Episode ${widget.videoUrl['id']}"),
+              title: Text("Episode ${widget.videoDocument['id']}"),
               centerTitle: true,
             ),
             body: Column(
@@ -90,11 +90,11 @@ class _PlayerState extends State<Player> {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Text(
-                    widget.videoUrl['title'],
+                    widget.videoDocument['title'],
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
-                        fontFamily:"UID",
+                        fontFamily: "UID",
                         fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -111,10 +111,12 @@ class _PlayerState extends State<Player> {
   ];
 
   String _getIdFromUrl() {
-    String url = widget.videoUrl['url'];
+    String url = widget.videoDocument['url'];
     if (url == null || url.length == 0) return null;
 
     url = url.trim();
+
+    print(url);
 
     for (var exp in _regexps) {
       Match match = exp.firstMatch(url);
@@ -130,6 +132,7 @@ class _PlayerState extends State<Player> {
     super.dispose();
   }
 
+  // ignore: missing_return
   Future<bool> _onBackPressed() {
     _videoController?.pause();
     _interstitialAd?.show();

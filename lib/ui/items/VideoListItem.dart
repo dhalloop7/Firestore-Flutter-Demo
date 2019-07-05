@@ -66,6 +66,6 @@ class VideoListItem extends StatelessWidget {
 
   void openPlayer(DocumentSnapshot document, BuildContext context) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => Player(videoUrl: document)));
+        MaterialPageRoute(builder: (context) => Player(videoDocument: document)));
   }
 }

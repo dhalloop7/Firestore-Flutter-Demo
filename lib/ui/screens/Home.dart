@@ -82,9 +82,10 @@ class _HomeState extends State<Home> {
           ),
           centerTitle: true,
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream:
-              Firestore.instance.collection('videos').orderBy('id').snapshots(),
+        body: FutureBuilder<QuerySnapshot>(
+//          stream:
+//              Firestore.instance.collection('videos').orderBy('id').snapshots(),
+          future: _loadVideos(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -104,6 +105,10 @@ class _HomeState extends State<Home> {
             }
           },
         ));
+  }
+
+  Future<QuerySnapshot> _loadVideos() async {
+    return await Firestore.instance.collection("videos").orderBy('id').getDocuments();
   }
 
   @override
